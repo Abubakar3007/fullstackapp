@@ -2,7 +2,7 @@ import React from 'react'
 
 const Listing = () => {
     return (
-        <div>Listing</div>
+        <div>This is my first listing</div>
     )
 }
 
