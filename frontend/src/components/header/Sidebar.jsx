@@ -2,7 +2,7 @@ import React from 'react'
 import Logo from '../../assets/images/logo-db.png';
 const Sidebar = () => {
     return (
-        <aside className='fixed top-0 left-0 text-white bg-blue-950 max-h-[100vh] min-h-[100vh] z-[1000] w-[20%] transition-all duration-200 ease-in-out px-8 overflow-y-scroll'>
+        <aside className='fixed top-0 left-0 text-white bg-blue-950 max-h-[100vh] min-h-[100vh] z-[1000] w-[20%] transition-all duration-200 ease-in-out px-8'>
             {/* Logo */}
             <div className='py-9 pl-[43px]'>
                 <a href="" alt="">

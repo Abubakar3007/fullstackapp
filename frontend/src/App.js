@@ -8,6 +8,8 @@ import MyProfile from "./pages/MyProfile";
 import Home from "./pages/Home";
 import Listing from "./pages/Listing";
 import Details from "./pages/Details";
+import SellCar from "./pages/SellCar";
+import DashboardLayout from "./components/DashboardLayout";
 
 function App() {
   return (
@@ -18,9 +20,12 @@ function App() {
         <Route path='/register/' element={<Register />} />
         <Route path='/login/' element={<Login />} />
         <Route path='/forget-password/' element={<ForgetPassword />} />
-        <Route path='/my-profile/' element={<MyProfile />} />
         <Route path='/listing/' element={<Listing />} />
-        <Route path='/details/' element={<Details/>} />
+        <Route path='/details/' element={<Details />} />
+        <Route element={<DashboardLayout />}>
+          <Route path='/sell-car/' element={<SellCar />} />
+          <Route path='/my-profile/' element={<MyProfile />} />
+        </Route>
       </Routes>
     </Router>
   );
