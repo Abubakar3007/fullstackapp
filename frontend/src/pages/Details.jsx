@@ -6,7 +6,7 @@ const Details = () => {
     <main className="pt-8 pb-16">
         {/* top container */}
         <div>
-            <div className="max-w-[1320px] w-full px-3 mx-auto">
+            <div className="max-w-[1520px] w-full px-3 mx-auto">
                 <Breadcrumb/>
             </div>
         </div>
