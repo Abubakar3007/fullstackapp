@@ -22,7 +22,7 @@ const Details = () => {
                 <div className='my-12 max-w-[1200px] w-full mx-auto'>
                     <DetailTab/>
                     <div className="flex gap-4 mt-8">
-                        <div className='max-w-[66%] w-full'>
+                        <div className='max-w-[66%] w-full space-y-10'>
                             <Info/>
                             <Description/>
                             <Overview/>
