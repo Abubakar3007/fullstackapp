@@ -3,7 +3,7 @@ import Listing from '../pages/Listing'
 import { Link } from 'react-router-dom';
 const Breadcrumb = () => {
   return (
-    <div>
+    <div className="mb-8 py-5 border-b border-[#ededed]">
         <ul className="space-x-3 text-sm text-gray-600">
             <li className="inline-block text-orange-500">
                 <Link to="/">Home</Link>
