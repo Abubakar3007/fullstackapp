@@ -7,6 +7,7 @@ import Header from "./components/header/Header";
 import MyProfile from "./pages/MyProfile";
 import Home from "./pages/Home";
 import Listing from "./pages/Listing";
+import Details from "./pages/Details";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/forget-password/' element={<ForgetPassword />} />
         <Route path='/my-profile/' element={<MyProfile />} />
         <Route path='/listing/' element={<Listing />} />
+        <Route path='/details/' element={<Details/>} />
       </Routes>
     </Router>
   );
