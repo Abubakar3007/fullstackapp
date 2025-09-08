@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import UplodImage from '../components/sellcar/UplodImage'
+import axios from 'axios'
 
 const SellCar = () => {
 
@@ -48,11 +49,67 @@ const SellCar = () => {
         ],
     }
 
+    const [formData, setFormData] = useState({
+        title: '',
+        make: '',
+        model: '',
+        body: '',
+        year: '',
+        condition: '',
+        stock_number: '',
+        vin_number: '',
+        mileage: '',
+        transmission: '',
+        cylinders: '',
+        engine: '',
+        fuel_type: '',
+        drive_type: '',
+        door: '',
+        color: '',
+        seat: '',
+        city_mpg: '',
+        highway_mpg: '',
+        description: '',
+        features: {
+            power: [],
+            comfort: [],
+            interior: [],
+            exterior: [],
+            safety: [],
+            entertainment: [],
+        },
+        price: '',
+        custom_price: '',
+        after_price: '',
+        location: '',
+        video_url: '',
+        photos: [],
+        documents: [],
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:5000/api/car/sell-car', formData);
+            console.log(response);
+            alert("Car listed successfully!");
+        }
+        catch (err) {
+            console.error(err);
+            alert("Error listing car");
+        }
+    }
+
     return (
         <div>
             <div>
                 <h1 className='text-4xl mb-10 font-medium'>Sell your car</h1>
-                <form className='space-y-6'>
+                <form className='space-y-6' onSubmit={handleSubmit}>
                     {/* add photo */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
                         <h3 className='text-2xl font-medium mb-4'>Upload Photo</h3>
@@ -85,15 +142,22 @@ const SellCar = () => {
                                     type='text'
                                     id='title'
                                     name='title'
+                                    onChange={handleInputChange}
+                                    value={formData.title}
                                     placeholder='Enter car title'
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                             <div className='grid grid-cols-4 gap-x-4 gap-y-6 mb-6'>
+                                {/* make */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Make*</label>
+                                    <label htmlFor='make' className='block mb-2 text-sm'>Make*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
+                                        name='make'
+                                        id='make'
+                                        onChange={handleInputChange}
+                                        value={formData.make}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
                                         <option value="">None</option>
                                         <option value="audi">Audi</option>
                                         <option value="bmw">BMW</option>
@@ -109,14 +173,32 @@ const SellCar = () => {
                                         <option value="toyota">Toyota</option>
                                     </select>
                                 </div>
+                                {/* model */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Model*</label>
-                                    <select name="model" id="model" className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'><option value="a4">A4</option><option value="almera">Almera</option><option value="bellett">Bellett</option><option value="c-class">C-Class</option><option value="camry">Camry</option><option value="carnival">Carnival</option><option value="defender-130">DEFENDER 130</option><option value="evoque-autobiography">EVOQUE AUTOBIOGRAPHY</option><option value="grand-cherokee">Grand Cherokee</option><option value="i7">i7</option><option value="ix3">iX3</option><option value="kicks">Kicks</option><option value="mondeo-sport">Mondeo Sport</option><option value="panther">Panther</option><option value="q8-e-tron">Q8 e-tron</option><option value="s-class">S-Class</option><option value="shine-gs">SHINE GS</option><option value="shine-max">SHINE MAX</option><option value="soul">Soul</option><option value="territory">Territory</option></select>
-                                </div>
-                                <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Body*</label>
+                                    <label htmlFor='model' className='block mb-2 text-sm'>Model*</label>
                                     <select
-                                        name='model'
+                                        name="model"
+                                        id="model"
+                                        onChange={handleInputChange}
+                                        value={formData.model}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="a4">A4</option>
+                                        <option value="almera">Almera</option>
+                                        <option value="bellett">Bellett</option>
+                                        <option value="c-class">C-Class</option>
+                                        <option value="camry">Camry</option>
+                                        <option value="carnival">Carnival</option>
+                                        <option value="defender-130">DEFENDER 130</option><option value="evoque-autobiography">EVOQUE AUTOBIOGRAPHY</option><option value="grand-cherokee">Grand Cherokee</option><option value="i7">i7</option><option value="ix3">iX3</option><option value="kicks">Kicks</option><option value="mondeo-sport">Mondeo Sport</option><option value="panther">Panther</option><option value="q8-e-tron">Q8 e-tron</option><option value="s-class">S-Class</option><option value="shine-gs">SHINE GS</option><option value="shine-max">SHINE MAX</option><option value="soul">Soul</option><option value="territory">Territory</option></select>
+                                </div>
+                                {/* body */}
+                                <div>
+                                    <label htmlFor='body' className='block mb-2 text-sm'>Body*</label>
+                                    <select
+                                        name='body'
+                                        id='body'
+                                        onChange={handleInputChange}
+                                        value={formData.body}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
                                         <option value="">None</option>
                                         <option value="20">Convertible</option>
@@ -131,20 +213,28 @@ const SellCar = () => {
                                         <option value="25">SUV</option>
                                     </select>
                                 </div>
+                                {/* year */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Year</label>
+                                    <label htmlFor='year' className='block mb-2 text-sm'>Year</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='year'
+                                        name='year'
+                                        onChange={handleInputChange}
+                                        value={formData.year}
+                                        placeholder='Enter year'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* condition */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Condition*</label>
+                                    <label htmlFor='condition' className='block mb-2 text-sm'>Condition*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
+                                        name='condition'
+                                        id='condition'
+                                        onChange={handleInputChange}
+                                        value={formData.condition}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
                                         <option value="">None</option>
                                         <option value="audi">Audi</option>
                                         <option value="bmw">BMW</option>
@@ -160,124 +250,198 @@ const SellCar = () => {
                                         <option value="toyota">Toyota</option>
                                     </select>
                                 </div>
+                                {/* stock */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Stock number</label>
+                                    <label htmlFor='stock' className='block mb-2 text-sm'>Stock number</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='stock'
+                                        name='stock'
+                                        onChange={handleInputChange}
+                                        value={formData.stock}
+                                        placeholder='Enter stock number'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* vin */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>VIN Number</label>
+                                    <label htmlFor='vin' className='block mb-2 text-sm'>VIN Number</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='vin'
+                                        name='vin'
+                                        onChange={handleInputChange}
+                                        value={formData.vin}
+                                        placeholder='Enter car vin number'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* mileage */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Mileage</label>
+                                    <label htmlFor='mileage' className='block mb-2 text-sm'>Mileage</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='mileage'
+                                        name='mileage'
+                                        onChange={handleInputChange}
+                                        value={formData.mileage}
+                                        placeholder='Enter car mileage'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* transmission */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Transmission*</label>
+                                    <label htmlFor='transmission' className='block mb-2 text-sm'>Transmission*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option><option value="31">Automatic</option><option value="32">CVT</option><option value="33">DCT</option><option value="30">Manual</option>
+                                        name='transmission'
+                                        id='transmission'
+                                        onChange={handleInputChange}
+                                        value={formData.transmission}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="">None</option>
+                                        <option value="31">Automatic</option>
+                                        <option value="32">CVT</option>
+                                        <option value="33">DCT</option>
+                                        <option value="30">Manual</option>
                                     </select>
                                 </div>
+                                {/* cylinders */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Cylinders*</label>
+                                    <label htmlFor='cylinder' className='block mb-2 text-sm'>Cylinders*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option><option value="113">4WD – Four-wheel drive</option><option value="112">AWD – All-wheel drive</option><option value="110">FWD – Front-wheel drive</option><option value="111">RWD – Rear-wheel drive</option>
+                                        name='cylinder'
+                                        id='cylinder'
+                                        onChange={handleInputChange}
+                                        value={formData.cylinder}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="">None</option>
+                                        <option value="37">10</option>
+                                        <option value="34">4</option>
+                                        <option value="35">6</option>
+                                        <option value="36">8</option>
                                     </select>
                                 </div>
+                                {/* engine size */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Engine size</label>
+                                    <label htmlFor='engine' className='block mb-2 text-sm'>Engine size</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='engine'
+                                        name='engine'
+                                        onChange={handleInputChange}
+                                        value={formData.engine}
+                                        placeholder='Enter car engine size'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* fuel type */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Fuel type*</label>
+                                    <label htmlFor='fuel_type' className='block mb-2 text-sm'>Fuel type*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option><option value="37">10</option><option value="34">4</option><option value="35">6</option><option value="36">8</option>
+                                        name='fuel_type'
+                                        id='fuel_type'
+                                        onChange={handleInputChange}
+                                        value={formData.fuel_type}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="">None</option>
+                                        <option value="38">Diesel</option>
+                                        <option value="39">Electric</option>
+                                        <option value="42">Gasoline</option>
+                                        <option value="40">Hybrid</option>
+                                        <option value="41">Petrol</option>
                                     </select>
                                 </div>
+                                {/* drive type */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Drive type*</label>
+                                    <label htmlFor='drive_type' className='block mb-2 text-sm'>Drive type*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option><option value="38">Diesel</option><option value="39">Electric</option><option value="42">Gasoline</option><option value="40">Hybrid</option><option value="41">Petrol</option>
+                                        name='drive_type'
+                                        id='drive_type'
+                                        onChange={handleInputChange}
+                                        value={formData.drive_type}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="">None</option>
+                                        <option value="113">4WD – Four-wheel drive</option>
+                                        <option value="112">AWD – All-wheel drive</option>
+                                        <option value="110">FWD – Front-wheel drive</option>
+                                        <option value="111">RWD – Rear-wheel drive</option>
                                     </select>
                                 </div>
+                                {/* door */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Door</label>
+                                    <label htmlFor='door' className='block mb-2 text-sm'>Door</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='door'
+                                        name='door'
+                                        onChange={handleInputChange}
+                                        value={formData.door}
+                                        placeholder='Enter car door'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* color */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Color*</label>
+                                    <label htmlFor='color' className='block mb-2 text-sm'>Color*</label>
                                     <select
-                                        name='model'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option><option value="45">Black</option><option value="43">Blue</option><option value="48">Gold</option><option value="44">Gray</option><option value="46">Red</option><option value="47">White</option>
+                                        name='color'
+                                        id='color'
+                                        onChange={handleInputChange}
+                                        value={formData.color}
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    >
+                                        <option value="">None</option>
+                                        <option value="45">Black</option>
+                                        <option value="43">Blue</option>
+                                        <option value="48">Gold</option>
+                                        <option value="44">Gray</option>
+                                        <option value="46">Red</option>
+                                        <option value="47">White</option>
                                     </select>
                                 </div>
+                                {/* seat */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Seat</label>
+                                    <label htmlFor='seat' className='block mb-2 text-sm'>Seat</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='seat'
+                                        name='seat'
+                                        onChange={handleInputChange}
+                                        value={formData.seat}
+                                        placeholder='Enter car seat'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* city mpg */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>City MPG</label>
+                                    <label htmlFor='city_mpg' className='block mb-2 text-sm'>City MPG</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='city_mpg'
+                                        name='city_mpg'
+                                        onChange={handleInputChange}
+                                        value={formData.city_mpg}
+                                        placeholder='Enter car city mpg'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
+                                {/* highway mpg */}
                                 <div>
-                                    <label htmlFor='title' className='block mb-2 text-sm'>Highway MPG</label>
+                                    <label htmlFor='highway_mpg' className='block mb-2 text-sm'>Highway MPG</label>
                                     <input
                                         type='text'
-                                        id='title'
-                                        name='title'
-                                        placeholder='Enter car title'
+                                        id='highway_mpg'
+                                        name='highway_mpg'
+                                        onChange={handleInputChange}
+                                        value={formData.highway_mpg}
+                                        placeholder='Enter car highway mpg'
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                                 </div>
                             </div>
                             {/* description */}
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>Car Description*</label>
-                                <textarea id='title'
-                                    name='title'
+                                <label htmlFor='description' className='block mb-2 text-sm'>Car Description*</label>
+                                <textarea id='description'
+                                    name='description'
+                                    onChange={handleInputChange}
+                                    value={formData.description}
                                     placeholder='Enter car description'
                                     className='h-[120px] rounded-[8px] border border-[#ededed] outline-none p-4 w-full text-sm'></textarea>
                             </div>
@@ -419,23 +583,29 @@ const SellCar = () => {
                                     type='text'
                                     id='price-1'
                                     name='title'
+                                    onChange={handleInputChange}
+                                    value={formData.price}
                                     placeholder='Example value 123456.45'
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>Price Custom Label</label>
+                                <label htmlFor='custom_price' className='block mb-2 text-sm'>Price Custom Label</label>
                                 <input
                                     type='text'
-                                    id='title'
-                                    name='title'
+                                    id='custom_price'
+                                    name='custom_price'
+                                    onChange={handleInputChange}
+                                    value={formData.custom_price}
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>After Price Label</label>
+                                <label htmlFor='after_price' className='block mb-2 text-sm'>After Price Label</label>
                                 <input
                                     type='text'
-                                    id='title'
-                                    name='title'
+                                    id='after_price'
+                                    name='after_price'
+                                    onChange={handleInputChange}
+                                    value={formData.after_price}
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                         </div>
@@ -445,20 +615,22 @@ const SellCar = () => {
                         <h3 className='text-2xl font-medium mb-4'>Location</h3>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>Full Address*</label>
+                                <label htmlFor='location' className='block mb-2 text-sm'>Full Address*</label>
                                 <input
                                     type='text'
                                     id='price-1'
-                                    name='title'
+                                    name='location'
+                                    onChange={handleInputChange}
+                                    value={formData.location}
                                     placeholder='Enter full address'
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>Map location</label>
+                                <label htmlFor='map' className='block mb-2 text-sm'>Map location</label>
                                 <input
                                     type='text'
-                                    id='price-1'
-                                    name='title'
+                                    id='map'
+                                    name='map'
                                     className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                             </div>
                         </div>
@@ -468,11 +640,13 @@ const SellCar = () => {
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
                         <h3 className='text-2xl font-medium mb-4'>Video</h3>
                         <div>
-                            <label htmlFor='title' className='block mb-2 text-sm'>Video URL</label>
+                            <label htmlFor='video_url' className='block mb-2 text-sm'>Video URL</label>
                             <input
                                 type='text'
-                                id='price-1'
-                                name='title'
+                                id='video_url'
+                                name='video_url'
+                                onChange={handleInputChange}
+                                value={formData.video_url}
                                 placeholder='Your URL'
                                 className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
                         </div>
@@ -480,16 +654,7 @@ const SellCar = () => {
                     {/* atteched file */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
                         <h3 className='text-2xl font-medium mb-4'>Attechment</h3>
-                        <div>
-                            <label htmlFor='title' className='block mb-2 text-sm'>Text Attachments File</label>
-                            <input
-                                type='text'
-                                id='price-1'
-                                name='title'
-                                placeholder='Your URL'
-                                className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
-                        </div>
-                        <label className='max-w-[240px] h-[150px] mt-6 flex flex-col justify-center items-center gap-2 text-sm border cursor-pointer border-dashed border-[#ededed] rounded-[8px] font-medium text-center hover:text-orange-500 hover:border-orange-500'>
+                        <label className='max-w-[240px] h-[150px] flex flex-col justify-center items-center gap-2 text-sm border cursor-pointer border-dashed border-[#ededed] rounded-[8px] font-medium text-center hover:text-orange-500 hover:border-orange-500'>
                             <input
                                 type='file'
                                 id='upload'
@@ -499,9 +664,22 @@ const SellCar = () => {
                             <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
                             <span>Upload File</span>
                         </label>
+                        <div className='mt-6'>
+                            <div className='flex gap-2 items-center'>
+                                <div className='w-20 h-20 rounded-[10px] overflow-hidden border border-[#ededed] flex-shrink-0'>
+
+                                </div>
+                                <div className='w-full'>
+                                    <input
+                                        type='text'
+                                        readOnly
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {/* button */}
-                    <button className='max-w-[250px] w-full h-10 bg-orange-500 text-white rounded-[12px] text-[16px] mx-auto transition-all duration-300 ease-in hover:bg-black block'>Sell your car</button>
+                    <button type='submit' className='max-w-[250px] w-full h-10 bg-orange-500 text-white rounded-[12px] text-[16px] mx-auto transition-all duration-300 ease-in hover:bg-black block'>Sell your car</button>
                 </form>
             </div>
         </div>
