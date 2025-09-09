@@ -104,6 +104,51 @@ const SellCar = () => {
         }));
     };
 
+    // remove photo
+    const handleRemovePhoto = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            photos: prev.photos.filter((_, i) => i !== index),
+        }));
+    };
+
+    const isChecked = (category, value) => {
+        const f = formData.features;
+        if (!f) return false;
+      
+        // support both grouped object and fallback flat-array (see Option B)
+        if (Array.isArray(f)) return f.includes(value);
+        return Array.isArray(f[category]) && f[category].includes(value);
+      };
+      
+
+    const handleFeatureChange = (category, value) => {
+        setFormData(prev => {
+          const f = prev.features || {};
+          // if features is a flat array (unexpected), handle that too:
+          if (Array.isArray(f)) {
+            const already = f.includes(value);
+            return {
+              ...prev,
+              features: already ? f.filter(v => v !== value) : [...f, value]
+            };
+          }
+      
+          // grouped object case:
+          const current = Array.isArray(f[category]) ? f[category] : [];
+          const already = current.includes(value);
+          const updatedCategory = already ? current.filter(v => v !== value) : [...current, value];
+      
+          return {
+            ...prev,
+            features: {
+              ...f,
+              [category]: updatedCategory
+            }
+          };
+        });
+      };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -140,19 +185,18 @@ const SellCar = () => {
                         </div>
                         {/* upload images here */}
                         <div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4'>
-                            {formData.photos.map((photo, index) => (
-                                <UplodImage
-                                    key={index}
-                                    photo={photo}
-                                    index={index}
-                                    onRemove={(i) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            photos: prev.photos.filter((_, idx) => idx !== i),
-                                        }))
-                                    }
-                                />
-                            ))}
+                            {formData.photos.length > 0 ? (
+                                formData.photos.map((photo, index) => (
+                                    <UplodImage
+                                        key={index}
+                                        photo={photo}
+                                        index={index}
+                                        onRemove={handleRemovePhoto}
+                                    />
+                                ))
+                            ) : (
+                                <p className="text-gray-400 text-sm col-span-full text-center">No photos uploaded yet</p>
+                            )}
                         </div>
                     </div>
                     {/* car details */}
@@ -486,6 +530,8 @@ const SellCar = () => {
                                                 id={`power${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("power", feature)}
+                                                onChange={() => handleFeatureChange("power", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`power${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
@@ -506,6 +552,8 @@ const SellCar = () => {
                                                 id={`comfort${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("comfort", feature)}
+                                                onChange={() => handleFeatureChange("comfort", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`comfort${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
@@ -526,6 +574,8 @@ const SellCar = () => {
                                                 id={`interior${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("interior", feature)}
+                                                onChange={() => handleFeatureChange("interior", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`interior${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
@@ -546,6 +596,8 @@ const SellCar = () => {
                                                 id={`exterior${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("exterior", feature)}
+                                                onChange={() => handleFeatureChange("exterior", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`exterior${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
@@ -566,6 +618,8 @@ const SellCar = () => {
                                                 id={`safety${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("safety", feature)}
+                                                onChange={() => handleFeatureChange("safety", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`safety${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
@@ -586,6 +640,8 @@ const SellCar = () => {
                                                 id={`entertainment${index}`}
                                                 name="features"
                                                 value={feature}
+                                                checked={isChecked("entertainment", feature)}
+                                                onChange={() => handleFeatureChange("entertainment", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
                                             <label htmlFor={`entertainment${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
