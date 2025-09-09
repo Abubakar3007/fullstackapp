@@ -60,7 +60,7 @@ const SellCar = () => {
         vin_number: '',
         mileage: '',
         transmission: '',
-        cylinders: '',
+        cylinder: '',
         engine: '',
         fuel_type: '',
         drive_type: '',
@@ -92,6 +92,18 @@ const SellCar = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
+    const handlePhotoUpload = (e) => {
+        const files = Array.from(e.target.files);
+
+        // convert to base64 or upload to a service (Cloudinary, S3, etc.)
+        const newPhotos = files.map((file) => URL.createObjectURL(file));
+
+        setFormData((prev) => ({
+            ...prev,
+            photos: [...prev.photos, ...newPhotos].slice(0, 20),
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -115,7 +127,12 @@ const SellCar = () => {
                         <h3 className='text-2xl font-medium mb-4'>Upload Photo</h3>
                         <div className='flex flex-col items-center justify-center py-[96px] px-5 border border-dashed border-[#ededed] rounded-[20px] text-center'>
                             <label className='cursor-pointer bg-orange-500 px-5 rounded-[10px] text-[16px] font-medium text-white h-10 leading-[38px] transition-all duration-300 ease-in hover:bg-black'>
-                                <input type='file' multiple className='hidden' />
+                                <input
+                                    type='file'
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handlePhotoUpload}
+                                    className='hidden' />
                                 <i class="fa-solid fa-image align-middle mr-1"></i>
                                 <span className='align-middle'>Select photos</span>
                             </label>
@@ -123,12 +140,19 @@ const SellCar = () => {
                         </div>
                         {/* upload images here */}
                         <div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4'>
-                            <UplodImage />
-                            <UplodImage />
-                            <UplodImage />
-                            <UplodImage />
-                            <UplodImage />
-                            <UplodImage />
+                            {formData.photos.map((photo, index) => (
+                                <UplodImage
+                                    key={index}
+                                    photo={photo}
+                                    index={index}
+                                    onRemove={(i) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            photos: prev.photos.filter((_, idx) => idx !== i),
+                                        }))
+                                    }
+                                />
+                            ))}
                         </div>
                     </div>
                     {/* car details */}
@@ -578,11 +602,11 @@ const SellCar = () => {
                         <h3 className='text-2xl font-medium mb-4'>Price</h3>
                         <div className='grid grid-cols-3 gap-4'>
                             <div>
-                                <label htmlFor='title' className='block mb-2 text-sm'>Regular Price*</label>
+                                <label htmlFor='price' className='block mb-2 text-sm'>Regular Price*</label>
                                 <input
-                                    type='text'
-                                    id='price-1'
-                                    name='title'
+                                    type='number'
+                                    id='price'
+                                    name='price'
                                     onChange={handleInputChange}
                                     value={formData.price}
                                     placeholder='Example value 123456.45'

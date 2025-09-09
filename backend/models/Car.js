@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const carSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    mode: { type: String, required: true },
+    make: { type: String, required: true },
     model: { type: String, required: true },
     body: { type: String, required: true },
     year: { type: Number, required: true },
@@ -11,7 +11,7 @@ const carSchema = new mongoose.Schema({
     vin_number: { type: Number },
     mileage: { type: Number },
     transmission: { type: String, required: true },
-    cylinders: { type: String, required: true },
+    cylinder: { type: String, required: true },
     engine: { type: String },
     fuel_type: { type: String, required: true },
     drive_type: { type: String, required: true },
