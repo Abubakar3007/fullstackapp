@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+function arrayLimit(val) {
+    return val.length <= 20;
+}
+
 const carSchema = new mongoose.Schema({
     title: { type: String, required: true },
     make: { type: String, required: true },
@@ -27,18 +31,16 @@ const carSchema = new mongoose.Schema({
     location: { type: String, required: true },
     video_url: { type: String },
 
-    // ✅ Photos field (up to 10 images)
     photos: {
-        type: [String], // store image URLs/paths
+        type: [String],
         validate: [arrayLimit, '{PATH} exceeds the limit of 20'],
     },
 
-    documents:{
-        type:[String],
+    documents: {
+        type: [String],
         validate: [arrayLimit, '{PATH} exceeds the limit of 20'],
     },
 
-    // ✅ Features
     features: {
         power: [{ type: String }],
         comfort: [{ type: String }],
@@ -48,10 +50,5 @@ const carSchema = new mongoose.Schema({
         entertainment: [{ type: String }],
     }
 });
-
-// helper function to limit array length
-function arrayLimit(val) {
-    return val.length <= 20;
-}
 
 module.exports = mongoose.model('Car', carSchema);

@@ -63,3 +63,11 @@ button{
     }
   }
 }
+
+select {
+  background-image: url('./assets/images/chevron-down.svg');
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px);
+  cursor: pointer;
+}

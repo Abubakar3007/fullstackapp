@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link ,useLocation} from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar';
 
 const Header = () => {
@@ -57,14 +57,14 @@ const Header = () => {
               )
           }
           {/* Add car button */}
-          <button className='px-4 py-2 rounded-full bg-[#ff7101] text-white text-sm'>
+          <Link to={user ? '/sell-car/' : '/login/'} className='px-4 py-2 rounded-full bg-[#ff7101] text-white text-sm'>
             <i className="fa-solid fa-car"></i>
             <span className='inline-block ml-2'>Sell your car</span>
-          </button>
+          </Link>
         </div>
       </div>
       {
-        (user && isPathProfile) ? (<Sidebar />): ''
+        (user && isPathProfile) ? (<Sidebar />) : ''
       }
     </header>
   )

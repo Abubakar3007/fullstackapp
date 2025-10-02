@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-const Breadcrumb = () => {
+const Breadcrumb = ({name}) => {
   return (
     <div className="mb-8 py-5 border-b border-[#ededed]">
         <ul className="space-x-3 text-sm text-gray-600">
@@ -12,7 +12,7 @@ const Breadcrumb = () => {
                 <Link to='/listing/'>Listing</Link>
                 <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
             </li>
-            <li className="inline-block">Details</li>
+            <li className="inline-block">{name}</li>
         </ul>
     </div>
   )

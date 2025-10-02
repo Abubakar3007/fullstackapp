@@ -1,53 +1,9 @@
 import React, { useState } from 'react'
 import UplodImage from '../components/sellcar/UplodImage'
 import axios from 'axios'
-
+import { carData, bodyTypes, conditions, transmissions, cylinders, fuelTypes } from '../components/sellcar/carData';
+const features = { "power": ["touch screen", "anti lock breaking system", "power windows rear", "power window front", "air conditioning", "alloy wheels", "function steering wheel", "engine start stop button"], "comfort": ["power steering", "power boot", "adjustable steering", "power windows-front", "low fuel warning light", "power windows-rear", "heater", "accessory power outlet"], "interior": ["Tachometer", "Glove Compartment", "Dual Tone Dashboard", "Digital Clock", "Fabric Upholstery", "Digital Odometer", "Premium Leather Seats", "Wood Trim"], "exterior": ["Adjustable Headlights", "Rear Spoiler", "Sun Roof", "Wheel Covers", "Halogen Headlamps", "LED Taillights", "Power Antenna", "Roof Rail"], "safety": ["Child Safety Locks", "Side Impact Beams", "Engine Immobilizer", "Rear Seat Belts", "Power Door Locks", "Seat Belt Warning", "Adjustable Seats", "Anti-Theft Device"], "entertainment": ["Radio", "Integrated 2DIN Audio", "Speakers Front", "USB & Auxiliary input", "Speakers Rear", "Bluetooth Connectivity", "Phone Connectivity", "In-car Wi-Fi"], }
 const SellCar = () => {
-
-    const features = {
-        "power": ["touch screen", "anti lock breaking system", "power windows rear", "power window front", "air conditioning", "alloy wheels", "function steering wheel", "engine start stop button"],
-        "comfort": ["power steering", "power boot", "adjustable steering", "power windows-front", "low fuel warning light", "power windows-rear", "heater", "accessory power outlet"],
-        "interior": [
-            "Tachometer",
-            "Glove Compartment",
-            "Dual Tone Dashboard",
-            "Digital Clock",
-            "Fabric Upholstery",
-            "Digital Odometer",
-            "Premium Leather Seats",
-            "Wood Trim"
-        ],
-        "exterior": [
-            "Adjustable Headlights",
-            "Rear Spoiler",
-            "Sun Roof",
-            "Wheel Covers",
-            "Halogen Headlamps",
-            "LED Taillights",
-            "Power Antenna",
-            "Roof Rail"
-        ],
-        "safety": [
-            "Child Safety Locks",
-            "Side Impact Beams",
-            "Engine Immobilizer",
-            "Rear Seat Belts",
-            "Power Door Locks",
-            "Seat Belt Warning",
-            "Adjustable Seats",
-            "Anti-Theft Device"
-        ],
-        "entertainment": [
-            "Radio",
-            "Integrated 2DIN Audio",
-            "Speakers Front",
-            "USB & Auxiliary input",
-            "Speakers Rear",
-            "Bluetooth Connectivity",
-            "Phone Connectivity",
-            "In-car Wi-Fi"
-        ],
-    }
 
     const [formData, setFormData] = useState({
         title: '',
@@ -90,86 +46,113 @@ const SellCar = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    };
 
     const handlePhotoUpload = (e) => {
-        const files = Array.from(e.target.files);
-
-        // convert to base64 or upload to a service (Cloudinary, S3, etc.)
-        const newPhotos = files.map((file) => URL.createObjectURL(file));
-
-        setFormData((prev) => ({
+        setFormData(prev => ({
             ...prev,
-            photos: [...prev.photos, ...newPhotos].slice(0, 20),
+            photos: Array.from(e.target.files)
         }));
     };
 
-    // remove photo
     const handleRemovePhoto = (index) => {
-        setFormData((prev) => ({
-            ...prev,
-            photos: prev.photos.filter((_, i) => i !== index),
-        }));
+        setFormData(prev => ({ ...prev, photos: prev.photos.filter((_, i) => i !== index) }));
     };
 
     const isChecked = (category, value) => {
         const f = formData.features;
         if (!f) return false;
-      
+
         // support both grouped object and fallback flat-array (see Option B)
         if (Array.isArray(f)) return f.includes(value);
         return Array.isArray(f[category]) && f[category].includes(value);
-      };
-      
+    };
 
     const handleFeatureChange = (category, value) => {
         setFormData(prev => {
-          const f = prev.features || {};
-          // if features is a flat array (unexpected), handle that too:
-          if (Array.isArray(f)) {
-            const already = f.includes(value);
+            const current = prev.features[category];
+            const updated = current.includes(value)
+                ? current.filter(v => v !== value)
+                : [...current, value];
             return {
-              ...prev,
-              features: already ? f.filter(v => v !== value) : [...f, value]
+                ...prev,
+                features: { ...prev.features, [category]: updated }
             };
-          }
-      
-          // grouped object case:
-          const current = Array.isArray(f[category]) ? f[category] : [];
-          const already = current.includes(value);
-          const updatedCategory = already ? current.filter(v => v !== value) : [...current, value];
-      
-          return {
-            ...prev,
-            features: {
-              ...f,
-              [category]: updatedCategory
-            }
-          };
         });
-      };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            const response = await axios.post('http://localhost:5000/api/car/sell-car', formData);
-            console.log(response);
-            alert("Car listed successfully!");
-        }
-        catch (err) {
+            const data = new FormData();
+            Object.keys(formData).forEach(key => {
+                if (key === 'features') {
+                    data.append('features', JSON.stringify(formData.features));
+                } else if (key === 'photos') {
+                    formData.photos.forEach(file => data.append('photos', file));
+                } else {
+                    data.append(key, formData[key]);
+                }
+            });
+
+            const res = await axios.post('http://localhost:5000/api/car/sell-car', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            alert(res.data.message);
+            setFormData({
+                title: '',
+                make: '',
+                model: '',
+                body: '',
+                year: '',
+                condition: '',
+                stock_number: '',
+                vin_number: '',
+                mileage: '',
+                transmission: '',
+                cylinder: '',
+                engine: '',
+                fuel_type: '',
+                drive_type: '',
+                door: '',
+                color: '',
+                seat: '',
+                city_mpg: '',
+                highway_mpg: '',
+                description: '',
+                features: {
+                    power: [],
+                    comfort: [],
+                    interior: [],
+                    exterior: [],
+                    safety: [],
+                    entertainment: [],
+                },
+                price: '',
+                custom_price: '',
+                after_price: '',
+                location: '',
+                video_url: '',
+                photos: [],
+                documents: [],
+            });
+        } catch (err) {
             console.error(err);
-            alert("Error listing car");
+            alert('Error listing car');
         }
-    }
+    };
+
 
     return (
         <div>
             <div>
-                <h1 className='text-4xl mb-10 font-medium'>Sell your car</h1>
+                <h1 className='mb-10 text-4xl font-medium'>Sell your car</h1>
                 <form className='space-y-6' onSubmit={handleSubmit}>
                     {/* add photo */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Upload Photo</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Upload Photo</h3>
                         <div className='flex flex-col items-center justify-center py-[96px] px-5 border border-dashed border-[#ededed] rounded-[20px] text-center'>
                             <label className='cursor-pointer bg-orange-500 px-5 rounded-[10px] text-[16px] font-medium text-white h-10 leading-[38px] transition-all duration-300 ease-in hover:bg-black'>
                                 <input
@@ -181,7 +164,7 @@ const SellCar = () => {
                                 <i class="fa-solid fa-image align-middle mr-1"></i>
                                 <span className='align-middle'>Select photos</span>
                             </label>
-                            <p className='text-sm mt-2'>or drag photos here <br /><span className='text-gray-400'>(Up to 10 photos)</span></p>
+                            <p className='mt-2 text-sm'>or drag photos here <br /><span className='text-gray-400'>(Up to 10 photos)</span></p>
                         </div>
                         {/* upload images here */}
                         <div className='mt-6 grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4'>
@@ -195,13 +178,13 @@ const SellCar = () => {
                                     />
                                 ))
                             ) : (
-                                <p className="text-gray-400 text-sm col-span-full text-center">No photos uploaded yet</p>
+                                <p className="text-sm text-center text-gray-400 col-span-full">No photos uploaded yet</p>
                             )}
                         </div>
                     </div>
                     {/* car details */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Car Details</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Car Details</h3>
                         <div>
                             {/* title */}
                             <div className='mb-6'>
@@ -213,9 +196,12 @@ const SellCar = () => {
                                     onChange={handleInputChange}
                                     value={formData.title}
                                     placeholder='Enter car title'
-                                    className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
+                                    className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                />
+                                {/* error show here */}
+                                <p className='mt-1 text-xs text-red-500'>Please enter title</p>
                             </div>
-                            <div className='grid grid-cols-4 gap-x-4 gap-y-6 mb-6'>
+                            <div className='grid grid-cols-4 mb-6 gap-x-4 gap-y-6'>
                                 {/* make */}
                                 <div>
                                     <label htmlFor='make' className='block mb-2 text-sm'>Make*</label>
@@ -224,21 +210,13 @@ const SellCar = () => {
                                         id='make'
                                         onChange={handleInputChange}
                                         value={formData.make}
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm appearance-none cursor-pointer'
                                     >
-                                        <option value="">None</option>
-                                        <option value="audi">Audi</option>
-                                        <option value="bmw">BMW</option>
-                                        <option value="dongfeng">Dongfeng</option>
-                                        <option value="ford">Ford</option>
-                                        <option value="foton">Foton</option>
-                                        <option value="isuzu">Isuzu</option>
-                                        <option value="jeep">Jeep</option>
-                                        <option value="kia">Kia</option>
-                                        <option value="land-rover">Land Rover</option>
-                                        <option value="mercedes-benz">Mercedes Benz</option>
-                                        <option value="nissan">Nissan</option>
-                                        <option value="toyota">Toyota</option>
+                                        {
+                                            Object.keys(carData).map(make => (
+                                                <option key={make} value={make}>{make}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* model */}
@@ -251,13 +229,13 @@ const SellCar = () => {
                                         value={formData.model}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
                                     >
-                                        <option value="a4">A4</option>
-                                        <option value="almera">Almera</option>
-                                        <option value="bellett">Bellett</option>
-                                        <option value="c-class">C-Class</option>
-                                        <option value="camry">Camry</option>
-                                        <option value="carnival">Carnival</option>
-                                        <option value="defender-130">DEFENDER 130</option><option value="evoque-autobiography">EVOQUE AUTOBIOGRAPHY</option><option value="grand-cherokee">Grand Cherokee</option><option value="i7">i7</option><option value="ix3">iX3</option><option value="kicks">Kicks</option><option value="mondeo-sport">Mondeo Sport</option><option value="panther">Panther</option><option value="q8-e-tron">Q8 e-tron</option><option value="s-class">S-Class</option><option value="shine-gs">SHINE GS</option><option value="shine-max">SHINE MAX</option><option value="soul">Soul</option><option value="territory">Territory</option></select>
+                                        <option>Select model</option>
+                                        {formData.make && carData[formData.make] &&
+                                            carData[formData.make].map(model => (
+                                                <option key={model} value={model}>{model}</option>
+                                            ))
+                                        }
+                                    </select>
                                 </div>
                                 {/* body */}
                                 <div>
@@ -268,17 +246,12 @@ const SellCar = () => {
                                         onChange={handleInputChange}
                                         value={formData.body}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'>
-                                        <option value="">None</option>
-                                        <option value="20">Convertible</option>
-                                        <option value="135">Coupe</option>
-                                        <option value="22">Crossover</option>
-                                        <option value="26">Hatchback</option>
-                                        <option value="23">Minivan</option>
-                                        <option value="134">MVP</option>
-                                        <option value="24">Pickup Truck</option>
-                                        <option value="27">Sedan</option>
-                                        <option value="21">Station Wagon</option>
-                                        <option value="25">SUV</option>
+                                        <option>Select body</option>
+                                        {
+                                            bodyTypes.map((body) => (
+                                                <option key={body} value={body}>{body}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* year */}
@@ -303,44 +276,39 @@ const SellCar = () => {
                                         value={formData.condition}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
                                     >
-                                        <option value="">None</option>
-                                        <option value="audi">Audi</option>
-                                        <option value="bmw">BMW</option>
-                                        <option value="dongfeng">Dongfeng</option>
-                                        <option value="ford">Ford</option>
-                                        <option value="foton">Foton</option>
-                                        <option value="isuzu">Isuzu</option>
-                                        <option value="jeep">Jeep</option>
-                                        <option value="kia">Kia</option>
-                                        <option value="land-rover">Land Rover</option>
-                                        <option value="mercedes-benz">Mercedes Benz</option>
-                                        <option value="nissan">Nissan</option>
-                                        <option value="toyota">Toyota</option>
+                                        <option>Select condition</option>
+                                        {
+                                            conditions.map((condition) => (
+                                                <option key={condition} value={condition}>{condition}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* stock */}
                                 <div>
-                                    <label htmlFor='stock' className='block mb-2 text-sm'>Stock number</label>
+                                    <label htmlFor='stock_number' className='block mb-2 text-sm'>Stock number</label>
                                     <input
                                         type='text'
-                                        id='stock'
-                                        name='stock'
+                                        id='stock_number'
+                                        name='stock_number'
                                         onChange={handleInputChange}
-                                        value={formData.stock}
+                                        value={formData.stock_number}
                                         placeholder='Enter stock number'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    />
                                 </div>
                                 {/* vin */}
                                 <div>
-                                    <label htmlFor='vin' className='block mb-2 text-sm'>VIN Number</label>
+                                    <label htmlFor='vin_number' className='block mb-2 text-sm'>VIN Number</label>
                                     <input
                                         type='text'
-                                        id='vin'
-                                        name='vin'
+                                        id='vin_number'
+                                        name='vin_number'
                                         onChange={handleInputChange}
-                                        value={formData.vin}
+                                        value={formData.vin_number}
                                         placeholder='Enter car vin number'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    />
                                 </div>
                                 {/* mileage */}
                                 <div>
@@ -352,7 +320,8 @@ const SellCar = () => {
                                         onChange={handleInputChange}
                                         value={formData.mileage}
                                         placeholder='Enter car mileage'
-                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm' />
+                                        className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
+                                    />
                                 </div>
                                 {/* transmission */}
                                 <div>
@@ -364,11 +333,12 @@ const SellCar = () => {
                                         value={formData.transmission}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
                                     >
-                                        <option value="">None</option>
-                                        <option value="31">Automatic</option>
-                                        <option value="32">CVT</option>
-                                        <option value="33">DCT</option>
-                                        <option value="30">Manual</option>
+                                        <option>Select transmission</option>
+                                        {
+                                            transmissions.map((transmission, index) => (
+                                                <option key={index} value={transmission}>{transmission}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* cylinders */}
@@ -381,11 +351,12 @@ const SellCar = () => {
                                         value={formData.cylinder}
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
                                     >
-                                        <option value="">None</option>
-                                        <option value="37">10</option>
-                                        <option value="34">4</option>
-                                        <option value="35">6</option>
-                                        <option value="36">8</option>
+                                        <option>Select cylinders</option>
+                                        {
+                                            cylinders.map((cylinder, index) => (
+                                                <option key={index} value={cylinder}>{cylinder}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* engine size */}
@@ -411,11 +382,11 @@ const SellCar = () => {
                                         className='h-12 rounded-[8px] border border-[#ededed] outline-none px-4 w-full text-sm'
                                     >
                                         <option value="">None</option>
-                                        <option value="38">Diesel</option>
-                                        <option value="39">Electric</option>
-                                        <option value="42">Gasoline</option>
-                                        <option value="40">Hybrid</option>
-                                        <option value="41">Petrol</option>
+                                        {
+                                            fuelTypes.map((fuelType, index) => (
+                                                <option key={index} value={fuelType}>{fuelType}</option>
+                                            ))
+                                        }
                                     </select>
                                 </div>
                                 {/* drive type */}
@@ -517,7 +488,7 @@ const SellCar = () => {
                     </div>
                     {/* Features */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Safety features</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Safety features</h3>
                         <div className='grid grid-cols-4 gap-x-4 gap-y-6'>
                             {/* fetures */}
                             <div>
@@ -534,7 +505,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("power", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`power${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`power${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -556,7 +527,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("comfort", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`comfort${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`comfort${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -578,7 +549,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("interior", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`interior${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`interior${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -600,7 +571,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("exterior", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`exterior${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`exterior${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -622,7 +593,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("safety", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`safety${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`safety${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -644,7 +615,7 @@ const SellCar = () => {
                                                 onChange={() => handleFeatureChange("entertainment", feature)}
                                                 className="h-5 w-5 rounded-[3px] border border-[#c8c8c9] cursor-pointer align-middle appearance-none checked:border-orange-500 checked:bg-orange-500 relative after:-rotate-45 after:left-[4px] after:top-[5px] after:absolute after:opacity-0 after:invisible after:w-[11px] after:h-[6px] after:border-l-2 after:border-white after:border-b-2 checked:after:visible checked:after:opacity-100"
                                             />
-                                            <label htmlFor={`entertainment${index}`} className="ml-2 text-sm font-medium align-middle capitalize cursor-pointer">
+                                            <label htmlFor={`entertainment${index}`} className="ml-2 text-sm font-medium capitalize align-middle cursor-pointer">
                                                 {feature}
                                             </label>
                                         </li>
@@ -655,7 +626,7 @@ const SellCar = () => {
                     </div>
                     {/* price */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Price</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Price</h3>
                         <div className='grid grid-cols-3 gap-4'>
                             <div>
                                 <label htmlFor='price' className='block mb-2 text-sm'>Regular Price*</label>
@@ -692,7 +663,7 @@ const SellCar = () => {
                     </div>
                     {/* location */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Location</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Location</h3>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label htmlFor='location' className='block mb-2 text-sm'>Full Address*</label>
@@ -718,7 +689,7 @@ const SellCar = () => {
                     </div>
                     {/* video url */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Video</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Video</h3>
                         <div>
                             <label htmlFor='video_url' className='block mb-2 text-sm'>Video URL</label>
                             <input
@@ -733,7 +704,7 @@ const SellCar = () => {
                     </div>
                     {/* atteched file */}
                     <div className='p-6 rounded-[15px] border border-[#ededed]'>
-                        <h3 className='text-2xl font-medium mb-4'>Attechment</h3>
+                        <h3 className='mb-4 text-2xl font-medium'>Attechment</h3>
                         <label className='max-w-[240px] h-[150px] flex flex-col justify-center items-center gap-2 text-sm border cursor-pointer border-dashed border-[#ededed] rounded-[8px] font-medium text-center hover:text-orange-500 hover:border-orange-500'>
                             <input
                                 type='file'
@@ -745,7 +716,7 @@ const SellCar = () => {
                             <span>Upload File</span>
                         </label>
                         <div className='mt-6'>
-                            <div className='flex gap-2 items-center'>
+                            <div className='flex items-center gap-2'>
                                 <div className='w-20 h-20 rounded-[10px] overflow-hidden border border-[#ededed] flex-shrink-0'>
 
                                 </div>
