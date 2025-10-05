@@ -4,6 +4,13 @@ function arrayLimit(val) {
     return val.length <= 20;
 }
 
+const reviewSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+})
+
 const carSchema = new mongoose.Schema({
     title: { type: String, required: true },
     make: { type: String, required: true },
@@ -48,7 +55,10 @@ const carSchema = new mongoose.Schema({
         exterior: [{ type: String }],
         safety: [{ type: String }],
         entertainment: [{ type: String }],
-    }
+    },
+
+    // ⭐ Add reviews
+    reviews: [reviewSchema],
 });
 
 module.exports = mongoose.model('Car', carSchema);

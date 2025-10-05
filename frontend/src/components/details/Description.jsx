@@ -11,7 +11,7 @@ const Description = ({description}) => {
         <div className="pb-10 border-b border-[#ededed]">
             <h2 className='mb-10 text-3xl font-medium'>Description</h2>
             <div className={`${isShow ? 'h-full after:invisible after:opacity-0' : 'h-20 after:visible after:opacity-100'} overflow-hidden text-gray-600 transition-all duration-300 ease-in relative after:w-full after:h-1/2 after:absolute after:left-0 after:right-0 after:bottom-0 after:transition-all after:duration-300 after:ease-in after:bg-[linear-gradient(180deg,rgba(55,100,235,0)_0%,#fff_100%)]`}>
-                <p className="text-[16px] font-medium leading-6 h-full">{description}</p>
+                <p className="text-[16px] font-medium leading-6 h-full whitespace-pre-line">{description}</p>
             </div>
             <button className='text-[16px] mt-[10px] transition-all duration-300 ease-in font-medium' onClick={handleShowMore}>
                 <span>{isShow?'Show Less':'Show More'}</span>

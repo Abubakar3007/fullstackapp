@@ -3,7 +3,7 @@ import React from 'react'
 const Info = ({ title, year, brand, fuelType, transmission, price, afterPrice }) => {
     return (
         <div className="pb-10 border-b border-[#ededed]">
-            <h1 className="mb-4 text-4xl font-medium">{title}</h1>
+            <h1 className="mb-4 text-4xl font-medium leading-[54px]">{title}</h1>
             <ul className="text-[16px] text-gray-600 flex gap-4 mb-3">
                 <li>
                     <i class="fa-solid fa-calendar-week mr-[6px] text-orange-500"></i>

@@ -1,9 +1,9 @@
-import React, { useState,useNavigate } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -66,7 +66,7 @@ const LoginForm = () => {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      navigate('/login/');
+      // navigate('/login/');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Registration failed!';
       setServerError(errorMessage);

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignUp = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -23,7 +23,7 @@ const SignUp = () => {
             });
             setServerMessage(response.data.message || "Login successful");
             localStorage.setItem("user", JSON.stringify(response.data.user));
-            navigate('/');
+            // navigate('/');
         }
         catch (error) {
             if (error.response && error.response.data) {

@@ -5,6 +5,7 @@ const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const updateRouter = require('./routes/update-profile');
 const carRouter = require('./routes/car');
+const reviewRouter = require('./routes/review');
 const cors = require('cors');
 const Car = require("./models/Car");
 const path = require('path');
@@ -66,4 +67,7 @@ app.use('/api/auth', loginRouter);
 app.use('/api/auth', updateRouter);
 // sell car
 app.use('/api/car', carRouter);
+// review
+app.use('/api/car', reviewRouter);
+
 

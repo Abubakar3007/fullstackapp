@@ -10,6 +10,7 @@ import Listing from "./pages/Listing";
 import Details from "./pages/Details";
 import SellCar from "./pages/SellCar";
 import DashboardLayout from "./components/DashboardLayout";
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   return (
