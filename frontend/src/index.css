@@ -9,6 +9,10 @@
   font-family: "Outfit", sans-serif;
 }
 
+body{
+  color:#303033
+}
+
 input,textarea{
   font-family: "Outfit", sans-serif;
 }
@@ -19,43 +23,32 @@ button{
   border: none;
 }
 
-.input-box {
-  .label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 150%;
-    color: #24272C;
-    margin-bottom: 6px;
-    text-align: left;
-  }
-
-  .input-wrap {
-    position: relative;
-
-    .input {
-      display: block;
-      width: 100%;
-      border-radius: 14px;
-      padding: 16px 20px 16px 43px;
-      font-size: 14px;
-      font-weight: 400;
-      border: 1px solid #EDEDED;
-      background: #fff;
-      -webkit-appearance: none;
-      outline: none;
-    }
-
-    &:focus {
-      border-color: #FF7101;
-    }
-  }
-}
-
 select {
   background-image: url('./assets/images/chevron-down.svg');
   appearance: none;
   background-repeat: no-repeat;
   background-position: calc(100% - 12px);
   cursor: pointer;
+}
+.auth-bg{
+  background-image : url('./assets/images/car-image.webp');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  width: 100%;
+  position: relative;
+}
+
+.auth-bg::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.google-btn{
+  background: linear-gradient(90deg, #4285F4 0%, #34A853 25%, #FBBC05 50%, #EA4335 75%);
 }

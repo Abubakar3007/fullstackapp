@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgetPassword from "./pages/ForgetPassword";
@@ -12,10 +12,18 @@ import SellCar from "./pages/SellCar";
 import DashboardLayout from "./components/DashboardLayout";
 import 'leaflet/dist/leaflet.css';
 
-function App() {
+// ✅ This component wraps everything and conditionally shows Header
+function LayoutWrapper() {
+  const location = useLocation();
+
+  // List of routes where Header should NOT appear
+  const hideHeaderRoutes = ["/login/", "/register/", "/forget-password/"];
+
+  const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
+
   return (
-    <Router>
-      <Header />
+    <>
+      {!shouldHideHeader && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/register/' element={<Register />} />
@@ -28,6 +36,14 @@ function App() {
           <Route path='/my-profile/' element={<MyProfile />} />
         </Route>
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <LayoutWrapper />
     </Router>
   );
 }

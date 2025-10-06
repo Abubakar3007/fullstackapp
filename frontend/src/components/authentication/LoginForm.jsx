@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   // const navigate = useNavigate();
@@ -86,20 +86,19 @@ const LoginForm = () => {
         <span aria-hidden="true"><i className="icon-autodeal-close"></i></span>
       </button>
       <div>
-        <h4>Register</h4>
-
+        <h1 className="text-2xl font-semibold mb-8 text-center">Register</h1>
         <form onSubmit={handleRegisterForm}>
           {/* Username */}
-          <div className='input-box'>
-            <label htmlFor="user-name" className='label'>Username:</label>
-            <div className='input-wrap'>
+          <div className='input-box mb-4'>
+            <label htmlFor="username" className='font-medium text-sm mb-2 hidden'>Username:</label>
+            <div className='input-wrap relative'>
               <input
                 type="text"
                 value={username}
-                placeholder='User name'
+                placeholder='Username'
                 id='user-name'
                 required
-                className='input placeholder-black-200 focus:border-[#ff7101]'
+                className='w-full text-sm border-2 border-blue-950/30 rounded-[12px] pl-12 h-[52px] px-4 outline-none transition-all duration-200 ease focus:border-2 focus:border-blue-950'
                 onChange={(e) => setUsername(e.target.value)}
               />
               <span className='absolute left-4 top-[50%] -translate-y-1/2'><i className="fa-regular fa-user"></i></span>
@@ -107,16 +106,16 @@ const LoginForm = () => {
             {usernameError && <p className="text-sm text-red-500">{usernameError}</p>}
           </div>
           {/* Email */}
-          <div className='input-box'>
-            <label htmlFor="email" className='label'>Email:</label>
-            <div className='input-wrap'>
+          <div className='input-box mb-4'>
+            <label htmlFor="email" className='font-medium text-sm mb-2 hidden'>Email:</label>
+            <div className='input-wrap relative'>
               <input
                 type="text"
                 value={email}
-                placeholder='Your Email'
+                placeholder='Email'
                 id='email'
                 required
-                className='input focus:border-orange-500'
+                className='w-full text-sm border-2 border-blue-950/30 rounded-[12px] pl-12 h-[52px] px-4 outline-none transition-all duration-200 ease focus:border-2 focus:border-blue-950'
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (emailError && emailRegex.test(e.target.value)) {
@@ -129,20 +128,20 @@ const LoginForm = () => {
             {emailError && <p className="text-sm text-red-500">{emailError}</p>}
           </div>
           {/* Password */}
-          <div className='input-box'>
-            <label htmlFor="password" className='label'>Password:</label>
-            <div className='input-wrap password-input'>
+          <div className='input-box mb-4'>
+            <label htmlFor="password" className='font-medium text-sm mb-2 hidden'>Password:</label>
+            <div className='input-wrap password-input relative'>
               <input
                 type={isPasswordShow ? 'text' : 'password'}
                 value={password}
-                placeholder='Your Password'
+                placeholder='Password'
                 id='password'
                 required
-                className='input'
+                className='w-full text-sm border-2 border-blue-950/30 rounded-[12px] pl-12 h-[52px] px-4 outline-none transition-all duration-200 ease focus:border-2 focus:border-blue-950'
                 onChange={(e) => setPassword(e.target.value)}
               />
               <span className='absolute left-4 top-[50%] -translate-y-1/2'><i className="fa-solid fa-lock"></i></span>
-              <button type="button" className='password-btn' onClick={PasswordToggle}>
+              <button type="button" className='absolute top-[50%] -translate-y-1/2 right-4 text-sm' onClick={PasswordToggle}>
                 {isPasswordShow ? <i className="fa-regular fa-eye"></i> : <i className="fa-regular fa-eye-slash"></i>}
               </button>
             </div>
@@ -150,15 +149,15 @@ const LoginForm = () => {
 
           {/* Confirm password */}
           <div className='input-box'>
-            <label htmlFor="confirm-password" className='label'>Confirm Password:</label>
-            <div className='input-wrap'>
+            <label htmlFor="confirm-password" className='font-medium text-sm mb-2 hidden'>Confirm Password:</label>
+            <div className='input-wrap relative'>
               <input
                 type="password"
                 value={confirmPassword}
                 placeholder='Confirm Password'
                 id='confirm-password'
                 required
-                className='input'
+                className='w-full text-sm border-2 border-blue-950/30 rounded-[12px] pl-12 h-[52px] px-4 outline-none transition-all duration-200 ease focus:border-2 focus:border-blue-950'
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                   if (passwordError && e.target.value === password) {
@@ -178,9 +177,9 @@ const LoginForm = () => {
           {successMessage && <p className="mt-2 text-sm text-green-600">{successMessage}</p>}
 
           {/* Submit button */}
-          <button type='submit' className='btn'>Sign Up</button>
+          <button type='submit' className='mt-12 w-full block mx-auto h-[52px] bg-blue-950/90 rounded-[12px] text-white font-medium'>Sign Up</button>
         </form>
-        <p className='mt-3 text-center'>Already have an account? <Link to='/login/' className='text-[#ff7101]'>Login</Link> </p>
+        <p className='mt-2 text-gray-500 text-center text-sm'>Already account? <Link to='/register/' className='text-blue-950/90 font-semibold pb-[2px] border-b border-blue-950/90'>Login</Link></p>
       </div>
     </div>
   );
