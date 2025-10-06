@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   // const navigate = useNavigate();
@@ -14,6 +14,7 @@ const LoginForm = () => {
   const [passwordError, setPasswordError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [serverError, setServerError] = useState('');
+  const navigate = useNavigate();
 
   // password state
   const [isPasswordShow, setPasswordShow] = useState(false);
@@ -66,7 +67,7 @@ const LoginForm = () => {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      // navigate('/login/');
+      navigate('/login/');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Registration failed!';
       setServerError(errorMessage);
@@ -90,7 +91,7 @@ const LoginForm = () => {
         <form onSubmit={handleRegisterForm}>
           {/* Username */}
           <div className='input-box'>
-            <label htmlFor="user-name" className='label'>User Name:</label>
+            <label htmlFor="user-name" className='label'>Username:</label>
             <div className='input-wrap'>
               <input
                 type="text"
@@ -105,7 +106,6 @@ const LoginForm = () => {
             </div>
             {usernameError && <p className="text-sm text-red-500">{usernameError}</p>}
           </div>
-
           {/* Email */}
           <div className='input-box'>
             <label htmlFor="email" className='label'>Email:</label>
@@ -116,7 +116,7 @@ const LoginForm = () => {
                 placeholder='Your Email'
                 id='email'
                 required
-                className='input'
+                className='input focus:border-orange-500'
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (emailError && emailRegex.test(e.target.value)) {
@@ -128,7 +128,6 @@ const LoginForm = () => {
             </div>
             {emailError && <p className="text-sm text-red-500">{emailError}</p>}
           </div>
-
           {/* Password */}
           <div className='input-box'>
             <label htmlFor="password" className='label'>Password:</label>
