@@ -11,6 +11,7 @@ import ObjectMap from '../components/details/ObjectMap'
 import Review from '../components/details/Review';
 import { useParams } from "react-router-dom";
 import axios from 'axios';
+import Owner from '../components/details/Owner'
 
 const Details = () => {
     let { id } = useParams();
@@ -19,14 +20,14 @@ const Details = () => {
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user) {
-          try {
-            const parsedUser = JSON.parse(user);
-            setUserId(parsedUser.id); // ✅ This runs only once after mount
-          } catch (err) {
-            console.error("Error parsing user from localStorage", err);
-          }
+            try {
+                const parsedUser = JSON.parse(user);
+                setUserId(parsedUser.id); // ✅ This runs only once after mount
+            } catch (err) {
+                console.error("Error parsing user from localStorage", err);
+            }
         }
-      }, []); 
+    }, []);
 
     const [car, setCar] = useState(null);
 
@@ -56,17 +57,18 @@ const Details = () => {
                 </div>
                 <div className='my-12 max-w-[1200px] w-full mx-auto'>
                     <DetailTab />
-                    <div className="flex gap-4 mt-8">
+                    <div className="flex gap-8 mt-8">
                         <div className='max-w-[66%] w-full space-y-10'>
-                            <Info title={car.title} year={car.year} brand={car.make} fuelType={car.fuel_type} transmission={car.transmission} price={car.price} afterPrice={car.after_price} />
                             <Description description={car.description} />
-                            <Overview condition={car.condition} cylinder={car.cylinder} stockNumber={car.stock_number} fuelType={car.fuel_type} vinNumber={car.vin_number} doors={car.door} year={car.year} color={car.color} seat={car.seat} transmission={car.transmission} cityMpg={car.city_mpg} driveType={car.drive_type} highwayMpg={car.highway_mpg} engineSize={car.engine}/>
+                            <Overview condition={car.condition} cylinder={car.cylinder} stockNumber={car.stock_number} fuelType={car.fuel_type} vinNumber={car.vin_number} doors={car.door} year={car.year} color={car.color} seat={car.seat} transmission={car.transmission} cityMpg={car.city_mpg} driveType={car.drive_type} highwayMpg={car.highway_mpg} engineSize={car.engine} />
                             <Faetures features={car?.features || {}} />
-                            <ObjectMap location={car?.location}/>
+                            <ObjectMap location={car?.location} />
                             <LoanCalculator />
                             <Review id={id} userId={userId} />
                         </div>
-                        <div className="max-w-[34%] w-full"></div>
+                        <div className="max-w-[34%] w-full">
+                            <Info title={car.title} year={car.year} brand={car.make} fuelType={car.fuel_type} transmission={car.transmission} price={car.price} afterPrice={car.after_price} />
+                        </div>
                     </div>
                 </div>
             </div>
